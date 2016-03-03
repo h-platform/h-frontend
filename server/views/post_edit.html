@@ -1,0 +1,66 @@
+{% extends './layouts/default.html' %}
+<style type="text/css">
+  .fixed-width {
+    width: 80px;
+  }
+</style>
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+    
+    <ul class="nav nav-tabs">
+      <li role="presentation"><a href="/localities">المحلية</a></li>
+      <li role="presentation"><a href="/localities/1.1">الحي</a></li>
+      <li role="presentation"><a href="/quarters/1.1.1">العروض</a></li>
+      <li role="presentation" class="active"><a href="/post/{{post_row.id}}">تفاصيل</a></li>
+    </ul>
+    <form action="/posts/new" method="post">
+    <h3 class="text-center">إضافة العرض</h3>
+    <ul class="list-group">
+      <li class="list-group-item row">
+        <small class="col-xs-4">المحلية:</small>
+        <select class="col-xs-8">
+          {% for locality_row in locality_rows %}
+            <option value="{{locality_row.region_path}}">{{locality_row.region_name}}</option>
+          {% endfor %}
+        </select>
+      </li>
+      <li class="list-group-item row">
+        <small class="col-xs-4">المنطقة:</small> 
+        <select class="col-xs-8" name="region_id">
+          {% for quarter_row in quarter_rows %}
+            <option value="{{quarter_row.id}}"> {{quarter_row.region_name}}</option>
+          {% endfor %}
+        </select>
+      </li>
+      <li class="list-group-item row">
+        <small class="col-xs-4">قطعة رقم</small>
+        <input class="col-xs-8" type="text" value="" name="plot_no">
+        
+        <small class="col-xs-4">مربع</small>
+        <input class="col-xs-8" type="text" value="" name="block_no">
+        
+        <small class="col-xs-4">المساحة (م.م.):</small>
+        <input class="col-xs-8" type="text" value="" name="plot_area">
+      </li>
+      <li class="list-group-item row">
+        <small class="col-xs-4">الميزات:</small>
+        <input class="col-xs-8" type="text" value="" name="features">
+      </li>
+      <li class="list-group-item row">
+        <small class="col-xs-4">السعر</small>
+        <input class="col-xs-5" type="text" value="" name="price">
+        <select class="col-xs-3" name="currency">
+          <option value="جنيه">جنيه</option>
+          <option value="دولار">دولار</option>
+        </select>
+      </li>
+      <li class="list-group-item row">
+        <button class="btn btn-primary btn-block">إرسال</button>
+      </li>
+
+    </ul>
+
+{% endblock %}
+
+
