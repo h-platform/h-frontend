@@ -6,6 +6,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/partials/{path*}',
             config: {
+                auth: false,
                 handler: {
                     directory: { path: './server/views/partials' }
                 },
@@ -16,6 +17,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/images/{path*}',
             config: {
+                auth: false,
                 handler: {
                     directory: { path: './public/images' }
                 },
@@ -26,6 +28,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/fonts/{path*}',
             config: {
+                auth: false,
                 handler: {
                     directory: { path: './public/fonts' }
                 },
@@ -36,6 +39,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/css/{path*}',
             config: {
+                auth: false,
                 handler: {
                     directory: { path: './public/css' }
                 },
@@ -46,6 +50,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/js/{path*}',
             config: {
+                auth: false,
                 handler: {
                     directory: { path: './public/js' }
                 },
@@ -56,6 +61,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/bower_components/{path*}',
             config: {
+                auth: false,
                 handler: {
                     directory: { path: './public/bower_components' }
                 },
@@ -65,7 +71,7 @@ exports.register = function(server, options, next){
     ]);
 
     next();
-}
+};
 
 exports.register.attributes = {
     name: 'assets'

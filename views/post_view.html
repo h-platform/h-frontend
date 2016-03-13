@@ -18,7 +18,10 @@
     </div>
 
     <div class="col-md-9">
-      <h3>{{post.title}}</h3>
+      <h3>
+        {{post.title}}
+        <a class="pull-right btn btn-primary" href="/posts/{{post.id}}/edit">Edit</a>
+      </h3>
       <table class="table table-bordered">
         <thead>
           <tr>

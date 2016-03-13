@@ -1,0 +1,14 @@
+###
+# Default configuration:
+#     Stores default configuration object for application. Most values
+#     will have to be overridden for development, testing, or production
+#     environments. Objects that *must* be overridden will be captioned
+#     with an @override tag.
+###
+
+###
+# Logging configuration for application. Only directory for logs
+# configurable thus far.
+###
+logging:
+  directory: "./logs"

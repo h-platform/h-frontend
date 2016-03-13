@@ -12,13 +12,45 @@ server.connection({
     host: '0.0.0.0'
 });
 
-// Setup the views engine and folder
-server.views({
-    engines: {
-        html: require('swig')
-    },
-    path: './server/views'
+
+//Session authentication scheme
+server.register(require('hapi-auth-cookie'), (err) => {
+
+    if (err) {
+        throw err;
+    }
+
+    const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 1000 });
+    server.app.cache = cache;
+
+    server.auth.strategy('session', 'cookie', true, {  
+        password: 'b252cbedbe1b81efc660cc15df003aa6',
+        isSecure: false,
+        isHttpOnly: true,
+        cookie: 'sid',
+        redirectOnTry: false,
+        redirectTo: '/user/login',
+        appendNext: true
+    });
 });
+
+
+//Session authentication scheme
+server.register(require('bell'), (err) => {
+
+    if (err) {
+        throw err;
+    }
+
+    server.auth.strategy('facebook', 'bell', {  
+        provider: 'facebook',
+        isSecure: false,
+        password: 'b252cbedbe1b81efc660cc15df003aa6',
+        clientId: '193712611002614',
+        clientSecret: 'e2f85f697f00637d4740176f6eabd78d'
+    });
+});
+
 
 // Export the server to be required elsewhere.
 module.exports = server;
@@ -40,6 +72,12 @@ server.register([
         }
     },
     {
+        register: require('vision'),
+    },
+    {
+        register: require('inert'),
+    },
+    {
         register: require("hapi-assets"),
         options: require('./assets.js')
     },
@@ -50,12 +88,29 @@ server.register([
         register: require("hapi-cache-buster")
     },
     {
-        register: require('./server/pods/assets/routes.js')
+        register: require('./pods/assets/routes.js')
     },
     {
-        register: require('./server/pods/main/routes.js')
+        register: require('./pods/main/routes.js')
+    },
+    {
+        register: require('./pods/login/routes.js')
     }
-], function () {
+], function (err) {
+
+    if (err) {
+        throw err;
+    }
+
+    //Vision Settings
+    server.views({
+        engines: { 
+            html: require('swig')
+        },
+        relativeTo: __dirname,
+        path: './views'
+    });
+
     //Start the server
     server.start(function() {
         //Log to the console the host and port info
