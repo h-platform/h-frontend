@@ -42,26 +42,34 @@ exports.loginManual = function (request, reply) {
     if (!request.payload.username || !request.payload.password) {
         message = 'Missing username or password';
         return reply.view('user/login', {message: message});
-    } 
-
-    account = users[request.payload.username];
-    console.log(request.payload.username);
-    console.log(account);
-    
-    if (!account || account.password !== request.payload.password) {
-        message = 'Invalid username or password';
-        return reply.view('user/login', { message: message });
     }
 
-    const sid = String(++uuid);
-    request.server.app.cache.set(sid, { account: account }, 0, (err) => {
+    client.act({ role:'auth', model: 'user', cmd:'validate', data: request.payload }, function (err, response) {
+        console.log('>>>>>>> found user', response);
 
-        if (err) {
-            reply(err);
+        if(err) {
+            console.log(err);
+            return reply.view('user/login', { message: 'some error occured' });
+        }
+        
+        //double check user is found and valid
+        if (!response.user) {
+            message = 'Invalid username or password';
+            return reply.view('user/login', { message: message });
         }
 
-        request.cookieAuth.set({ sid: sid });
-        return reply.redirect('/');
+        // This will set the cookie during the redirect and 
+        // log them into your application.
+        request.cookieAuth.set(response.user);
+
+        // User is now logged in, redirect them to their account area
+        console.log(request.query);
+
+        if(request.query.next) {
+            return reply.redirect(request.query.next);
+        } else {
+            return reply.redirect('/');
+        }
     });
 };
 
