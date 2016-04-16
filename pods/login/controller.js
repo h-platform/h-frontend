@@ -5,19 +5,6 @@ var client = seneca.client('10102');
 var config = require('config');
 var l = require('../../logger');
 
-const users = {
-    yasir: {
-        email: 'yasir',
-        password: 'password',
-        name: 'Yasir Hantoush'
-    }
-};
-
-var uuid = 1;
-
-
-
-
 // shows the different login options for the user
 // --------------------------------------------------------------
 exports.loginScreen = function(request, reply) {
@@ -45,8 +32,6 @@ exports.loginManual = function (request, reply) {
     }
 
     client.act({ role:'auth', model: 'user', cmd:'validate', data: request.payload }, function (err, response) {
-        console.log('>>>>>>> found user', response);
-
         if(err) {
             console.log(err);
             return reply.view('user/login', { message: 'some error occured' });
@@ -62,9 +47,8 @@ exports.loginManual = function (request, reply) {
         // log them into your application.
         request.cookieAuth.set(response.user);
 
-        // User is now logged in, redirect them to their account area
-        console.log(request.query);
 
+        // User is now logged in, redirect them to their account area
         if(request.query.next) {
             return reply.redirect(request.query.next);
         } else {
@@ -79,7 +63,7 @@ exports.loginManual = function (request, reply) {
 // render user profile
 // --------------------------------------------------------------
 exports.profile = function (request, reply) {
-    // console.log('$$$$$$$$$', request.auth);
+    l.info('request.auth object:', request.auth);
     return reply.view('user/profile', {
         auth: request.auth,
     });
@@ -92,8 +76,6 @@ exports.profile = function (request, reply) {
 // --------------------------------------------------------------
 exports.loginFacebook = function (request, reply) {
     l.log('Login handler for facebook is called');
-    // console.log('>>>> request.auth >>>>', request.auth);
-    // console.log('>>>> request.auth.credentials.query >>>>', request.auth.credentials.query);
     
     if (!request.auth.isAuthenticated) {
         return reply('Authentication failed due to: ' + request.auth.error.message);
@@ -102,10 +84,8 @@ exports.loginFacebook = function (request, reply) {
     // Perform account lookup or registration, then setup local session,
     // and redirect to the application. 
 
-    // The third-party credentials are
-    // stored in request.auth.credentials. Any query parameters from
-    // the initial request are passed back via request.auth.credentials.query.
-
+    // The third-party credentials are stored in request.auth.credentials.
+    // Any query parameters from the initial request are passed back via request.auth.credentials.query.
     var profile = request.auth.credentials.profile;
     
     // findOrCreateUser in database
@@ -116,6 +96,7 @@ exports.loginFacebook = function (request, reply) {
         // This will set the cookie during the redirect and 
         // log them into your application.
         request.cookieAuth.set(response.user);
+
         // User is now logged in, redirect them to their account area
         if(request.auth.credentials.query.next) {
             return reply.redirect(request.auth.credentials.query.next);
@@ -131,15 +112,13 @@ exports.loginFacebook = function (request, reply) {
 // login using google
 // --------------------------------------------------------------
 exports.loginGoogle = function (request, reply) {
-    l.log('Login handler for facebook is called');
+    l.log('Login handler for google is called');
 
     // Here we take the profile that was kindly pulled in
     // by bell and set it to our cookie session.
     // This will set the cookie during the redirect and 
     // log them into your application.
     request.cookieAuth.set(request.auth.credentials.profile);
-    // console.log('$$$$$$$$$', request.auth);
-    // console.log(request.query);
 
     // User is now logged in, redirect them to their account area
     if(request.query.next) {

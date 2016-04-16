@@ -5,6 +5,8 @@
 #     environments. Objects that *must* be overridden will be captioned
 #     with an @override tag.
 ###
+server:
+  port: 3000
 
 ###
 # Logging configuration for application. Only directory for logs

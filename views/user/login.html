@@ -4,10 +4,6 @@
 
 {% block head %}
   <style type="text/css">
-    body {
-      font-family: 'Raleway', sans-serif;
-    }
-
     p {
       color:#CCC;
     }
@@ -45,12 +41,12 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-5" >
-          <a href="/user/facebook?next={{ next|url_encode }}"><img src="http://techulus.com/buttons/fb.png" /></a><br/>
-          <a href="/user/twitter"><img src="http://techulus.com/buttons/tw.png" /></a><br/>
-          <a href="/user/google"><img src="http://techulus.com/buttons/gplus.png" /></a>
+          <a href="/user/facebook?next={{ next|url_encode }}"><img src="/images/fb.png" /></a><br/>
+          <a href="/user/twitter"><img src="/images/tw.png" /></a><br/>
+          <a href="/user/google"><img src="/images/gplus.png" /></a>
         </div>
         <div class="col-md-7" style="border-left:1px solid #ccc;height:160px">
-          <form action="/user/manual" method="POST" class="form-horizontal">
+          <form action="/user/manual{%if next %}?next={{next|url_encode}}{% endif %}" method="POST" class="form-horizontal">
             <fieldset>
               <input id="textinput" name="username" type="text" placeholder="Enter User Name" class="form-control input-md">
               <input id="textinput" name="password" type="text" placeholder="Enter Password" class="form-control input-md">
@@ -77,25 +73,6 @@
 {% block scripts %}
 
   <script type="text/javascript">
-    // hello.init({
-    //   facebook: '193712611002614'
-    // }, {redirect_uri: '/user/redirect'});
-
-    // hello.on('auth.login', function(auth) {
-    //   alert('auth.login event');
-    //   // Call user information, for the given network
-    //   hello(auth.network).api('/me').then(function(r) {
-    //     alert('/me api event');
-    //     // Inject it into the container
-    //     var label = document.getElementById('profile_' + auth.network);
-    //     if (!label) {
-    //       label = document.createElement('div');
-    //       label.id = 'profile_' + auth.network;
-    //       document.getElementById('profile').appendChild(label);
-    //     }
-    //     label.innerHTML = '<img src="' + r.thumbnail + '" /> Hey ' + r.name;
-    //   });
-    // });
   </script>
 
 {% endblock %}
